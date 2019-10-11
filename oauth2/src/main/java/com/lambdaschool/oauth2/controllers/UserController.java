@@ -1,5 +1,6 @@
 package com.lambdaschool.oauth2.controllers;
 
+import com.lambdaschool.oauth2.models.Todo;
 import com.lambdaschool.oauth2.models.User;
 import com.lambdaschool.oauth2.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,26 @@ public class UserController
                                     HttpStatus.OK);
     }
 
-    // http://localhost:2019/users/user/7
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @GetMapping(value = "/user/{userId}",
+//    // http://localhost:2019/users/user/7
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    @GetMapping(value = "/user/{userId}",
+//                produces = {"application/json"})
+//    public ResponseEntity<?> getUserById(
+//            @PathVariable
+//                    Long userId)
+//    {
+//        User u = userService.findUserById(userId);
+//        return new ResponseEntity<>(u,
+//                                    HttpStatus.OK);
+//    }
+
+
+
+
+
+    // http://localhost:2019/users/mine
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @GetMapping(value = "/user/mine",
                 produces = {"application/json"})
     public ResponseEntity<?> getUserById(
             @PathVariable
@@ -45,8 +63,11 @@ public class UserController
     {
         User u = userService.findUserById(userId);
         return new ResponseEntity<>(u,
-                                    HttpStatus.OK);
+                HttpStatus.OK);
     }
+
+
+
 
     // http://localhost:2019/users/user/name/cinnamon
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -135,6 +156,41 @@ public class UserController
     }
 
 
+
+
+
+//    // POST http://localhost:2019/users/user
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    @PostMapping(value = "/user",
+//                 consumes = {"application/json"})
+//    public ResponseEntity<?> addNewUser(@Valid
+//                                            @RequestBody
+//                                                    User newUser)
+//    {
+//        userService.save(newUser);
+//        return new ResponseEntity<>(HttpStatus.CREATED);
+//    }
+
+
+
+
+//
+//        // POST http://localhost:2019/users/todo/5
+//        @PreAuthorize("hasAuthority('ROLE_USER')")
+//        @PostMapping(value = "/todo/{todoid}",
+//                     consumes = {"application/json"})
+//        public ResponseEntity<?> addNewTodo(@Valid
+//                                                @RequestBody
+//                                                    Todo newTodo)
+//        {
+//            userService.save(newUser);
+//            return new ResponseEntity<>(HttpStatus.CREATED);
+//        }
+
+
+
+
+
     // http://localhost:2019/users/user/7
     //        {
     //            "userid": 7,
@@ -166,16 +222,24 @@ public class UserController
     }
 
 
-    // http://localhost:2019/users/user/14
+
+
+
+
+    // http://localhost:2019/users/userid/14
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/userid/{userid}")
     public ResponseEntity<?> deleteUserById(
             @PathVariable
-                    long id)
+                    long userid)
     {
-        userService.delete(id);
+        userService.delete(userid);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+
+
 
     // http://localhost:2019/users/user/15/role/2
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
