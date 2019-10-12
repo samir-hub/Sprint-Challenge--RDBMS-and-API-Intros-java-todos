@@ -49,19 +49,24 @@ public class UserController
 //                                    HttpStatus.OK);
 //    }
 
-
+//    // GET http://localhost:2019/customer/order
+//    @GetMapping(value = "/order",
+//                produces = {"application/json"})
+//    public ResponseEntity<?> listAllCustomers()
+//    {
+//        List<Customer> myList = customerService.findAll();
+//        return new ResponseEntity<>(myList, HttpStatus.OK);
+//    }
+//
 
 
 
     // http://localhost:2019/users/mine
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    @GetMapping(value = "/user/mine",
+    @GetMapping(value = "/mine",
                 produces = {"application/json"})
-    public ResponseEntity<?> getUserById(
-            @PathVariable
-                    Long userId)
+    public ResponseEntity<?> getCurrentUserInfo(Authentication authentication)
     {
-        User u = userService.findUserById(userId);
+        User u = userService.findByName(authentication.getName());
         return new ResponseEntity<>(u,
                 HttpStatus.OK);
     }
@@ -105,15 +110,15 @@ public class UserController
                                     HttpStatus.OK);
     }
 
-    // http://localhost:2019/users/getuserinfo
-    @GetMapping(value = "/getuserinfo",
-                produces = {"application/json"})
-    public ResponseEntity<?> getCurrentUserInfo(Authentication authentication)
-    {
-        User u = userService.findByName(authentication.getName());
-        return new ResponseEntity<>(u,
-                                    HttpStatus.OK);
-    }
+//    // http://localhost:2019/users/getuserinfo
+//    @GetMapping(value = "/getuserinfo",
+//                produces = {"application/json"})
+//    public ResponseEntity<?> getCurrentUserInfo(Authentication authentication)
+//    {
+//        User u = userService.findByName(authentication.getName());
+//        return new ResponseEntity<>(u,
+//                                    HttpStatus.OK);
+//    }
 
     // http://localhost:2019/users/user
     //        {
@@ -132,60 +137,64 @@ public class UserController
     //            }
     //        ]
     //        }
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PostMapping(value = "/user",
-                 consumes = {"application/json"},
-                 produces = {"application/json"})
-    public ResponseEntity<?> addNewUser(@Valid
-                                        @RequestBody
-                                                User newuser) throws URISyntaxException
-    {
-        newuser = userService.save(newuser);
-
-        // set the location header for the newly created resource
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI newUserURI = ServletUriComponentsBuilder.fromCurrentRequest()
-                                                    .path("/{userid}")
-                                                    .buildAndExpand(newuser.getUserid())
-                                                    .toUri();
-        responseHeaders.setLocation(newUserURI);
-
-        return new ResponseEntity<>(null,
-                                    responseHeaders,
-                                    HttpStatus.CREATED);
-    }
-
-
-
-
-
-//    // POST http://localhost:2019/users/user
 //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 //    @PostMapping(value = "/user",
-//                 consumes = {"application/json"})
+//                 consumes = {"application/json"},
+//                 produces = {"application/json"})
 //    public ResponseEntity<?> addNewUser(@Valid
-//                                            @RequestBody
-//                                                    User newUser)
+//                                        @RequestBody
+//                                                User newuser) throws URISyntaxException
 //    {
-//        userService.save(newUser);
-//        return new ResponseEntity<>(HttpStatus.CREATED);
+//        newuser = userService.save(newuser);
+//
+//        // set the location header for the newly created resource
+//        HttpHeaders responseHeaders = new HttpHeaders();
+//        URI newUserURI = ServletUriComponentsBuilder.fromCurrentRequest()
+//                                                    .path("/{userid}")
+//                                                    .buildAndExpand(newuser.getUserid())
+//                                                    .toUri();
+//        responseHeaders.setLocation(newUserURI);
+//
+//        return new ResponseEntity<>(null,
+//                                    responseHeaders,
+//                                    HttpStatus.CREATED);
 //    }
 
 
 
 
+
+
+
+
+
+    // POST http://localhost:2019/users/user
+    @PostMapping(value = "/user",
+                 consumes = {"application/json"},
+                 produces = {"application/json"})
+    public ResponseEntity<?> addNewUser(@Valid
+                                            @RequestBody
+                                                    User newUser) throws URISyntaxException{
+
+
+        newUser = userService.save(newUser);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+
+
+
 //
-//        // POST http://localhost:2019/users/todo/5
-//        @PreAuthorize("hasAuthority('ROLE_USER')")
-//        @PostMapping(value = "/todo/{todoid}",
-//                     consumes = {"application/json"})
-//        public ResponseEntity<?> addNewTodo(@Valid
-//                                                @RequestBody
-//                                                    Todo newTodo)
-//        {
-//            userService.save(newUser);
-//            return new ResponseEntity<>(HttpStatus.CREATED);
-//        }
+        // POST http://localhost:2019/users/todo/5
+        @PostMapping(value = "/todo/{todoid}",
+                     consumes = {"application/json"})
+        public ResponseEntity<?> addNewTodo(@Valid
+                                                @RequestBody
+                                                    Todo newTodo)
+        {
+            userService.save(newUser);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
 
 
 
@@ -220,7 +229,6 @@ public class UserController
                            request.isUserInRole("ADMIN"));
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
 
 

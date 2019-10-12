@@ -1,9 +1,6 @@
 package com.lambdaschool.oauth2.services;
 
-import com.lambdaschool.oauth2.models.Role;
-import com.lambdaschool.oauth2.models.User;
-import com.lambdaschool.oauth2.models.UserRoles;
-import com.lambdaschool.oauth2.models.Useremail;
+import com.lambdaschool.oauth2.models.*;
 import com.lambdaschool.oauth2.repository.RoleRepository;
 import com.lambdaschool.oauth2.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +109,15 @@ public class UserServiceImpl implements UserDetailsService,
                                        ur.getRole()));
         }
         newUser.setUserroles(newRoles);
-        newUser.setTodos(user.getTodos());
+        for (Todo t : user.getTodos())
+        {
+            newUser.getTodos().add(new Todo(t.getDescription(),
+                    t.getDatestarted(),
+                    t.isCompleted(),
+                    newUser
+
+            ));
+        }
 
 
         for (Useremail ue : user.getUseremails())
