@@ -2,6 +2,7 @@ package com.lambdaschool.oauth2.controllers;
 
 import com.lambdaschool.oauth2.models.Todo;
 import com.lambdaschool.oauth2.models.User;
+import com.lambdaschool.oauth2.services.TodoService;
 import com.lambdaschool.oauth2.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +25,9 @@ public class UserController
 {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TodoService todoService;
 
     // http://localhost:2019/users/users/
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -184,15 +188,17 @@ public class UserController
 
 
 
-//
+
         // POST http://localhost:2019/users/todo/5
-        @PostMapping(value = "/todo/{todoid}",
-                     consumes = {"application/json"})
+        @PostMapping(value = "/todo/{userid}",
+                     consumes = {"application/json"},
+                     produces = {"application/json"})
         public ResponseEntity<?> addNewTodo(@Valid
                                                 @RequestBody
-                                                    Todo newTodo)
-        {
-            userService.save(newUser);
+                                                    Todo newTodo,
+                                            @PathVariable long userid)
+        {   newTodo.setUser(userService.findUserById(userid));
+            todoService.save(newTodo);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
 
